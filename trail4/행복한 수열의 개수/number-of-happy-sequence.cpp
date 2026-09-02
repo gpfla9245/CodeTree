@@ -6,19 +6,23 @@ using namespace std;
 
 int n, m;
 int grid[MAX_N][MAX_N];
+int seq[MAX_N];
 
-
-//int isHappyNum(int arr[]) {
-//    int result = 0;
-//    int counting[101] = { 0, };
-//
-//    for (int i = 0; i < n; i++) {
-//        counting[arr[i]] += 1;
-//        if (counting[arr[i]] == m)
-//            return 1;
-//    }
-//    return 0;
-//}
+int isHappyNum() {
+    int count = 1;
+    int max_count = 1;
+    
+    for (int i = 1; i < n; i++) {
+        if (seq[i - 1] == seq[i]) {
+            count++;
+        }
+        else {
+            count = 1;
+        }
+        max_count = max(count, max_count);
+    }
+    return max_count >= m;
+}
 
 int main() {
     cin >> n >> m;
@@ -29,55 +33,30 @@ int main() {
         }
     }
 
-    int count = 0;
-
+    int result = 0;
+    
+    // 가로
     for (int i = 0; i < n; i++) {
-        int DAT[101] = { 0, };
-        int pred = 0;
-
         for (int j = 0; j < n; j++) {
-            int num = grid[i][j];
-            if (num != pred) {
-                DAT[num] = 1;
-                pred = num;
-            }
-            else {
-                DAT[num]++;
-                pred = num;
-            }
-            if (DAT[num] >= m) {
-                count++;
-                break;
-            }
-
+            seq[j] = grid[i][j];
         }
 
+        if (isHappyNum()) {
+            result++;
+        }
     }
 
-    for (int i = 0; i < n; i++) {
-        int DAT[101] = { 0, };
-        int pred = 0;
-
-        for (int j = 0; j < n; j++) {
-            int num = grid[j][i];
-            if (num != pred) {
-                DAT[num] = 1;
-                pred = num;
-            }
-            else {
-                DAT[num]++;
-                pred = num;
-            }
-            if (DAT[num] >= m) {
-                count++;
-                break;
-            }
-
+    // 세로
+    for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) {
+            seq[i] = grid[i][j];
         }
 
+        if (isHappyNum()) {
+            result++;
+        }
     }
-
-    cout << count;
+    cout << result;
 
 
     return 0;
